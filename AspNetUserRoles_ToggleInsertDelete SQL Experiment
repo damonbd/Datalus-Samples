@@ -1,0 +1,40 @@
+USE [C12]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROC [dbo].[AspNetUserRoles_ToggleInsertDelete]
+ 
+	@UserId nvarchar(128)
+	, @RoleName nvarchar(256)
+
+AS
+BEGIN
+	/*
+
+		EXEC dbo.AspNetUserRoles_InsertTest '8cf3633c-92b6-44fb-bd78-91fb15d7bd9c', 'Admin'
+
+	*/
+	IF  EXISTS (
+		SELECT *
+		FROM AspNetUserRoles anur
+		INNER JOIN AspNetRoles anr ON anur.RoleId = anr.Id
+		WHERE anr.Name IN (@RoleName) AND anur.UserId IN (@UserId)
+	 )
+	BEGIN
+		DELETE FROM AspNetUserRoles
+		FROM AspNetUserRoles anur
+		INNER JOIN AspNetRoles anr ON anur.RoleId = anr.Id
+		WHERE anr.Name IN (@RoleName) AND anur.UserId IN (@UserId)
+	END
+	ELSE
+	BEGIN
+		INSERT INTO AspNetUserRoles(UserId, RoleId)
+		SELECT @UserId, anr.Id
+		FROM AspNetRoles anr
+		WHERE anr.Name IN (@RoleName)
+	END
+END
