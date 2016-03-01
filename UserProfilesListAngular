@@ -1,0 +1,127 @@
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>List Of User Profiles</h2>
+
+<div class="content-body">
+
+    <div class="row" data-ng-controller="userProfileController as dashboard" id="userProfileCtrler">
+
+        <div class="col-md-4 col-sm-6 session" data-ng-repeat="userProfile in dashboard.items">
+
+            <div class="embed-responsive embed-responsive-16by9 text-light">
+                <img class="embed-responsive-item" src="~/wrapkit/images/dummy/desk4.jpg" alt="cover">
+                <div class="embed-overlay bg-grd-dark"></div>
+                <div class="embed-content">
+                    <p class="lead" hidden><a href="#" id="templateId">{{userProfile.id}}</a></p>
+                </div>
+                <div class="embed-bar embed-bar-bottom">
+
+                </div>
+            </div><!-- /.embed -->
+            <div class="panel-heading p-2x">
+                <div class="embed-extend-item">
+                    <a id="templateEditButton" href="/Profiles/{{userProfile.id}}" title="Click to View/Edit Profile" class="kit-avatar kit-avatar-96 border-white pull-left">
+                        <img src="Wrapkit/images/dummy/uifaces11.jpg" alt="Avatar">
+                    </a>
+                    <h3 class="subhead" id="templateUserName"><a href="#"></a>{{userProfile.userName}}<small></small></h3>
+                </div><!-- /.kit-cover-headline -->
+                <p class="clearfix">
+                    <div class="col-xs-4 bordered-right">
+                        <a href="#" class="text-center" id="templateInstructor">
+                            <strong>Instructor</strong>
+                            <br />
+                            <small>{{userProfile.instructor}}</small>
+                        </a>
+                        <br>
+                    </div>
+                    <div class="col-xs-4 bordered-right">
+                        <a href="#" class="text-center" id="templateTrack">
+                            <strong>Track</strong>
+                            <br />
+                            <small>{{userProfile.track}}</small>
+                        </a>
+                        <br>
+                    </div>
+                    <div class="col-xs-4">
+                        <a href="#" class="text-center" id="templateCurrentProject">
+                            <strong>CurrentProject</strong>
+                            <br />
+                            <small>{{userProfile.currentProject}}</small>
+                        </a>
+                    </div>
+                </p>
+            </div><!-- /.panel-body -->
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/datalus.services.userProfile.js"></script>
+    <script src="/Wrapkit/scripts/moment.js"></script>
+    <script type="text/javascript">
+
+        (function () {
+            "use strict";
+
+            angular.module(APPNAME)
+                .factory('$userProfileService', UserProfileServiceFactory);
+
+            UserProfileServiceFactory.$inject = ['$baseService', '$datalus'];
+
+            function UserProfileServiceFactory($baseService, $datalus) {
+
+                var userProfileServiceObject = datalus.services.userProfile;
+                var newService = $baseService.merge(true, {}, userProfileServiceObject, $baseService);
+
+                return newService;
+            }
+        })();
+
+        (function () {
+            "use strict";
+
+            angular.module(APPNAME)
+                .controller('userProfileController', UserProfileController);
+
+            UserProfileController.$inject = ['$scope', '$baseController', "$userProfileService"];
+
+            function UserProfileController(
+                $scope
+                , $baseController
+                , $userProfileService) {
+
+                var vm = this;
+                vm.items = null;
+                vm.$userProfileService = $userProfileService;
+                vm.$scope = $scope;
+                vm.getUserProfile = _getUserProfile;
+                vm.onError = _onError;
+                //-- this line to simulate inheritance
+                $baseController.merge(vm, $baseController);
+
+                vm.notify = vm.$userProfileService.getNotifier($scope);
+
+                render();
+
+                function render() {
+
+                    vm.$userProfileService.getAll(vm.getUserProfile, vm.onError);
+                }
+
+                function _getUserProfile(data) {
+                    vm.notify(function () {
+                        console.log(data.items);
+                        vm.items = data.items;
+                    });
+                }
+
+                function _onError(jqXhr, error) {
+                    console.error(error);
+                }
+            }
+        })();
+    </script>
+}
