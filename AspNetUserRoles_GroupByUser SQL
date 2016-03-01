@@ -1,0 +1,36 @@
+USE [C12]
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER proc [dbo].[AspNetUserRoles_GroupByUser]
+AS
+BEGIN
+/*
+
+	EXEC AspNetUserRoles_GroupByUser
+
+*/
+	--setting variables True and False
+	DECLARE @True bit, @False bit
+	
+	SELECT @True = 1, @False = 0
+
+	SELECT au.Id as UserId, au.UserName, au.Email  
+		, CASE WHEN sum( case when ar.name = 'Student'  then 1 else 0 end) > 0 THEN @True ELSE @False end as Student
+		, CASE WHEN sum( case when ar.name = 'Instructor'  then 1 else 0 end) > 0 THEN @True ELSE @False end as Instructor
+		, CASE WHEN sum( case when ar.name = 'Admin'  then 1 else 0 end) > 0 THEN @True ELSE @False end as Admin
+		, CASE WHEN sum( case when ar.name = 'SuperAdmin'  then 1 else 0 end) > 0 THEN @True ELSE @False end as SuperAdmin
+
+	FROM dbo.AspNetUsers au
+		left join dbo.AspNetUserRoles aur
+			on au.Id = aur.UserId 
+		left join dbo.AspNetRoles ar
+			on aur.RoleId = ar.Id
+	GROUP BY
+		au.Id, au.UserName, au.Email
+
+END
