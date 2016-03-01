@@ -1,8 +1,8 @@
-if (!sabio.services.admin) {
-    sabio.services.admin = {};
+if (!datalus.services.admin) {
+    datalus.services.admin = {};
 }
 
-sabio.services.admin.create = function (myData, onCreateSuccess, onCreateError) {
+datalus.services.admin.create = function (myData, onCreateSuccess, onCreateError) {
     var url = "/api/admin";
 
     var settings = {
@@ -18,7 +18,7 @@ sabio.services.admin.create = function (myData, onCreateSuccess, onCreateError) 
     $.ajax(url, settings);
 }
 
-sabio.services.admin.edit = function (id, myData, onEditSuccess, onEditError) {
+datalus.services.admin.edit = function (id, myData, onEditSuccess, onEditError) {
     var url = "/api/admin/" + id;
 
     var settings = {
@@ -34,7 +34,7 @@ sabio.services.admin.edit = function (id, myData, onEditSuccess, onEditError) {
     $.ajax(url, settings);
 }
 
-sabio.services.admin.getById = function (id, onSuccess, onError) {
+datalus.services.admin.getById = function (id, onSuccess, onError) {
     var url = "/api/admin/" + id;
     var settings = {
         cache: false
@@ -48,7 +48,7 @@ sabio.services.admin.getById = function (id, onSuccess, onError) {
     $.ajax(url, settings);
 }
 
-sabio.services.admin.getAll = function (onSuccess, onError) {
+datalus.services.admin.getAll = function (onSuccess, onError) {
     var url = "/api/admin";
     var settings = {
         cache: false
@@ -62,7 +62,7 @@ sabio.services.admin.getAll = function (onSuccess, onError) {
     $.ajax(url, settings);
 }
 
-sabio.services.admin.delete = function (items, onSuccess, onError) {
+datalus.services.admin.delete = function (items, onSuccess, onError) {
     var url = "/api/admin";
     var settings = {
         cache: false
