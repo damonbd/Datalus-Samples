@@ -1,0 +1,99 @@
+using Datalus.Web.Domain;
+using Datalus.Web.Models;
+using Datalus.Web.Models.Requests;
+using Datalus.Web.Models.Responses;
+using Datalus.Web.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+
+
+namespace Datalus.Web.Controllers.Api
+{
+    [Authorize]
+    [RoutePrefix("api/Admin")]
+    public class AdminApiController : BaseApiController
+    {
+        IUserProfileService _userProfileService = null;
+
+        public AdminApiController(IUserProfileService userProfileService)
+        {
+            _userProfileService = userProfileService;
+
+        }
+
+        [Route, HttpPost]
+        public HttpResponseMessage Insert(AspNetUserRolesToggleRequest model)
+        
+        {
+            try
+            {
+                if (!IsModelValid(model))
+                {
+                    return GetInvalidResponse(model);
+                }
+
+                AspNetUserRolesService.Insert(model);
+                SuccessResponse response = new SuccessResponse();
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)   
+            {
+                return GetErrorResponse(ex);
+            }
+        }
+
+        [Route("{id:int}"), HttpPut]
+        public HttpResponseMessage InstructorUpdate(UserProfileEditRequest model, int id)
+        {
+            try
+            {
+                if (!IsModelValid(model))
+                {
+                    return GetInvalidResponse(model);
+                }
+
+                _userProfileService.Update(model, id);
+                SuccessResponse response = new SuccessResponse();
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)
+            {
+                return GetErrorResponse(ex);
+            }
+        }
+
+        [Route, HttpGet]
+        public HttpResponseMessage GetAll()
+        {
+            try
+            {
+                ItemsResponse<AspNetUserRoles> response = new ItemsResponse<AspNetUserRoles>();
+                response.Items = AspNetUserRolesService.GetAll();
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)
+            {
+                return GetErrorResponse(ex);
+            }
+        }
+
+        [Route, HttpDelete]
+        public HttpResponseMessage Delete(AspNetUserRolesToggleRequest model)
+        {
+            try
+            {
+                AspNetUserRolesService.Delete(model);
+                SuccessResponse response = new SuccessResponse();
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            catch (Exception ex)
+            {
+                return GetErrorResponse(ex);
+            }
+        }
+    }
+}
