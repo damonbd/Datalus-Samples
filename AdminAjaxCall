@@ -1,0 +1,77 @@
+if (!sabio.services.admin) {
+    sabio.services.admin = {};
+}
+
+sabio.services.admin.create = function (myData, onCreateSuccess, onCreateError) {
+    var url = "/api/admin";
+
+    var settings = {
+        cache: false
+        , contentType: "application/json; charset=UTF-8"
+        , data: JSON.stringify(myData)
+        , dataType: "json"
+        , success: onCreateSuccess
+        , error: onCreateError
+        , type: "POST"
+    };
+
+    $.ajax(url, settings);
+}
+
+sabio.services.admin.edit = function (id, myData, onEditSuccess, onEditError) {
+    var url = "/api/admin/" + id;
+
+    var settings = {
+        cache: false
+        , contentType: "application/json; charset=UTF-8"
+        , data: JSON.stringify(myData)
+        , dataType: "json"
+        , success: onEditSuccess
+        , error: onEditError
+        , type: "PUT"
+    };
+    
+    $.ajax(url, settings);
+}
+
+sabio.services.admin.getById = function (id, onSuccess, onError) {
+    var url = "/api/admin/" + id;
+    var settings = {
+        cache: false
+        , contentType: "application/json; charset=UTF-8"
+        , dataType: "json"
+        , success: onSuccess
+        , error: onError
+        , type: "GET"
+    };
+
+    $.ajax(url, settings);
+}
+
+sabio.services.admin.getAll = function (onSuccess, onError) {
+    var url = "/api/admin";
+    var settings = {
+        cache: false
+        , contentType: "application/json; charset=UTF-8"
+        , dataType: "json"
+        , success: onSuccess
+        , error: onError
+        , type: "GET"
+    };
+
+    $.ajax(url, settings);
+}
+
+sabio.services.admin.delete = function (items, onSuccess, onError) {
+    var url = "/api/admin";
+    var settings = {
+        cache: false
+        , contentType: "application/json; charset=UTF-8"
+        , data: JSON.stringify(items)
+        , dataType: "json"
+        , success: onSuccess
+        , error: onError
+        , type: "DELETE"
+    };
+    $.ajax(url, settings);
+}
